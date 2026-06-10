@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-1
   CONTAINER_NAME: bd-mysql-container
-  
+
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
       uses: appleboy/ssh-action@v1.0.3
       with:
         # ---- CONFIGURACIÓN DE LA EC2 PRIVADA (DESTINO FINAL) ----
-        host: ${{ secrets.EC2_DB_PRIVATE_IP }} # La IP PRIVADA de tu base de datos (ej. 10.0.x.x)
+        host: ${{ secrets.EC2_DATABASE_IP }} # La IP PRIVADA de tu base de datos (ej. 10.0.x.x)
         username: ec2-user
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }} # Tu llave privada .pem
         
