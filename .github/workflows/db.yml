@@ -2,40 +2,48 @@ name: CI/CD Base de Datos
 
 on:
   push:
-    branches: [ "main" ] # Se activará al hacer push a la rama main para gatillar el despliegue
+    branches: [ "main" ]
 
 env:
   AWS_REGION: us-east-1
   CONTAINER_NAME: bd-mysql-container
+  
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    # Eliminamos checkout, build y push. Nos conectamos directo a la EC2 por SSH.
-    - name: Desplegar en EC2 Privada (Base de Datos)
+    - name: Desplegar en EC2 Privada mediante Bastión
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.EC2_FRONTEND_IP }} # OJO: Si usas una EC2 distinta para la DB, cambia este secreto.
+        # ---- CONFIGURACIÓN DE LA EC2 PRIVADA (DESTINO FINAL) ----
+        host: ${{ secrets.EC2_DB_PRIVATE_IP }} # La IP PRIVADA de tu base de datos (ej. 10.0.x.x)
         username: ec2-user
-        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }} # Tu llave privada .pem
+        
+        # ---- CONFIGURACIÓN DEL BASTIÓN (EC2 PÚBLICA) ----
+        proxy_host: ${{ secrets.EC2_FRONTEND_IP }} # La IP PÚBLICA del frontend
+        proxy_username: ec2-user
+        proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }} # Usualmente compartes la misma llave en laboratorios
+        
+        # ---- COMANDOS A EJECUTAR EN LA EC2 PRIVADA ----
         script: |
-          # 1. Pasar credenciales temporales de AWS Academy a la sesión SSH
+          # 1. Pasar credenciales temporales de AWS Academy
           export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
           export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           export AWS_SESSION_TOKEN="${{ secrets.AWS_SESSION_TOKEN }}"
           
-          # 2. Autenticar Docker con tu ECR usando la ruta estática
+          # 2. Autenticar Docker con tu ECR
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
-          # 3. Traer (PULL) la imagen de MySQL desde tu ECR
+          # 3. Traer (PULL) la imagen de MySQL desde ECR
           docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:latest
           
           # 4. Detener y limpiar el contenedor antiguo si existe
           docker stop bd-mysql-container || true
           docker rm bd-mysql-container || true
           
-          # 5. Levantar el nuevo contenedor MySQL con persistencia de datos y variables de entorno
+          # 5. Levantar el nuevo contenedor MySQL
           docker run -d -p 3306:3306 \
             -v mysql_data:/var/lib/mysql \
             -e MYSQL_ROOT_PASSWORD=rootpassword \
@@ -45,5 +53,5 @@ jobs:
             --name bd-mysql-container \
             572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:latest
             
-          # 6. Limpiar credenciales por seguridad
+          # 6. Limpiar credenciales
           unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
