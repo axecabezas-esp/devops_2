@@ -3,13 +3,12 @@ name: CI/CD Frontend
 on:
   push:
     branches: [ "main" ]
-    # OJO AQUÍ: Asegúrate de que tu carpeta local se llame 'front_despacho' o cambialo por 'proyectosemestral-frontend'
+    # Asegúrate de que esta carpeta coincida con tu repositorio
     paths:
-      - 'front_despacho/**' 
+      - 'proyectosemestral-frontend/**' 
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: proyectosemestral-frontend  # 1. CAMBIADO: Coincide con tu AWS ECR
   CONTAINER_NAME: front-despacho-container
 
 jobs:
@@ -31,25 +30,30 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Compilar y Subir Imagen a ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: latest
+    - name: Compilar y Subir Imagen a ECR (URI Estática)
       run: |
-        # 2. REVISIÓN: El comando docker build usa las variables definidas arriba
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG proyectosemestral-frontend/
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        # Compilar usando la ruta estática de tu ECR
+        docker build -t 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest ./proyectosemestral-frontend
+        
+        # Subir la imagen
+        docker push 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest
 
-    - name: Desplegar en EC2 pública mediante SSH
+    - name: Desplegar en EC2 pública mediante SSH (URI Estática)
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_FRONTEND_IP }}
         username: ec2-user
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-        # 3. CORREGIDO: Se reemplazaron variables del contexto local que fallarían por SSH
         script: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin 572332556337.dkr.ecr.us-east-1.amazonaws.com
-          docker pull 572332556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest
+          # Autenticar Docker dentro de la EC2
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
+          
+          # Descargar la nueva imagen
+          docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest
+          
+          # Limpiar contenedor antiguo si existe
           docker stop front-despacho-container || true
           docker rm front-despacho-container || true
-          docker run -d -p 80:80 --name front-despacho-container 572332556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest
+          
+          # Correr el nuevo contenedor
+          docker run -d -p 80:80 --name front-despacho-container 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-frontend:latest
