@@ -32,7 +32,7 @@ jobs:
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
           # 3. Traer (PULL) la imagen de MySQL desde ECR
-          docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:latest
+          docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:8.0
           
           # 4. Detener y limpiar el contenedor antiguo si existe
           docker stop bd-mysql-container || true
@@ -46,7 +46,7 @@ jobs:
             -e MYSQL_USER=user_sistema \
             -e MYSQL_PASSWORD=userpassword \
             --name bd-mysql-container \
-            572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:latest
+            572392556337.dkr.ecr.us-east-1.amazonaws.com/bd-mysql:8.0
             
           # 6. Limpiar credenciales
           unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
