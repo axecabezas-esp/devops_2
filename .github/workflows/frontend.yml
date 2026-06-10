@@ -5,6 +5,7 @@ on:
     branches: [ "main" ] # Se activará cuando hagas un push a main para iniciar el despliegue
     paths:
       - 'front_despacho/**'
+      - '.github/workflows/frontend.yml'
 
 
 jobs:

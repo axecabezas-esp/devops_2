@@ -3,6 +3,9 @@ name: CI/CD Backend Ventas
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'back-Ventas_SpringBoot/**'
+      - '.github/workflows/backend-ventas.yml'
 
 env:
   AWS_REGION: us-east-1
