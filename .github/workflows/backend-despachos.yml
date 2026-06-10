@@ -29,11 +29,6 @@ jobs:
         
         # ---- COMANDOS A EJECUTAR EN LA EC2 PRIVADA DE DESPACHOS ----
         script: |
-          # 1. Pasar credenciales temporales de AWS Academy
-          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          export AWS_SESSION_TOKEN="${{ secrets.AWS_SESSION_TOKEN }}"
-          
           # 2. Autenticar Docker con tu ECR usando la ruta estática
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
