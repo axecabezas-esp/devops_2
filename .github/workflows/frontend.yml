@@ -31,7 +31,6 @@ jobs:
         ECR_REGISTRY: 572392556337.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY: proyectosemestral-frontend
         IMAGE_TAG: v1
-        # Aquí inyectas la IP pública de tu backend para que Vite la use al compilar
         VITE_API_URL: http://${{ secrets.EC2_FRONTEND_IP }}:8080 
       run: |
         docker build \

@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # --- SERVICIO 1: Base de Datos MySQL ---
   bd-mysql:
     image: mysql:8.0
     container_name: bd-mysql-container
@@ -22,7 +21,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # --- SERVICIO 2: Backend de Ventas ---
   back-ventas:
     build:
       context: ./back-Ventas_SpringBoot/Springboot-API-REST
@@ -40,7 +38,6 @@ services:
       bd-mysql:
         condition: service_healthy
 
-  # --- SERVICIO 3: Backend de Despachos ---
   back-despachos:
     build:
       context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
@@ -58,7 +55,6 @@ services:
       bd-mysql:
         condition: service_healthy
 
-  # --- SERVICIO 4: Frontend (React + Nginx) ---
   frontend:
     build:
       context: ./front_despacho
