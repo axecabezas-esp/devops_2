@@ -19,29 +19,22 @@ jobs:
     - name: Desplegar en EC2 Privada mediante Bastión
       uses: appleboy/ssh-action@v1.0.3
       with:
-        # ---- CONFIGURACIÓN DE LA EC2 PRIVADA (DESTINO FINAL) ----
-        host: ${{ secrets.EC2_DATABASE_IP }} # La IP PRIVADA de tu base de datos (ej. 10.0.x.x)
+        host: ${{ secrets.EC2_DATABASE_IP }}
         username: ec2-user
-        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }} # Tu llave privada .pem
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         
-        # ---- CONFIGURACIÓN DEL BASTIÓN (EC2 PÚBLICA) ----
-        proxy_host: ${{ secrets.EC2_FRONTEND_IP }} # La IP PÚBLICA del frontend
+        proxy_host: ${{ secrets.EC2_FRONTEND_IP }}
         proxy_username: ec2-user
-        proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }} # Usualmente compartes la misma llave en laboratorios
+        proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         
-        # ---- COMANDOS A EJECUTAR EN LA EC2 PRIVADA ----
         script: |
-          # 2. Autenticar Docker con tu ECR
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
-          # 3. Traer (PULL) la imagen de MySQL desde ECR
           docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
           
-          # 4. Detener y limpiar el contenedor antiguo si existe
           docker stop bd-mysql-container || true
           docker rm bd-mysql-container || true
           
-          # 5. Levantar el nuevo contenedor MySQL
           docker run -d -p 3306:3306 \
             -e MYSQL_ROOT_PASSWORD=rootpassword \
             -e MYSQL_DATABASE=db_sistema \
@@ -50,5 +43,4 @@ jobs:
             --name bd-mysql-container \
             572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
             
-          # 6. Limpiar credenciales
           unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN

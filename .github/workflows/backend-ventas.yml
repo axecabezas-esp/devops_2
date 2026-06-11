@@ -16,33 +16,25 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    # Eliminamos checkout, build y push. Conexión directa a través del bastión.
     - name: Desplegar en EC2 Privada (Ventas) mediante Bastión
       uses: appleboy/ssh-action@v1.0.3
       with:
-        # ---- CONFIGURACIÓN DE LA EC2 PRIVADA (DESTINO: BACKEND VENTAS) ----
-        host: ${{ secrets.EC2_VENTAS_IP }} # La IP PRIVADA de tu instancia de Ventas
+        host: ${{ secrets.EC2_VENTAS_IP }} 
         username: ec2-user
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         
-        # ---- CONFIGURACIÓN DEL BASTIÓN (EC2 PÚBLICA) ----
-        proxy_host: ${{ secrets.EC2_FRONTEND_IP }} # La IP PÚBLICA del frontend
+        proxy_host: ${{ secrets.EC2_FRONTEND_IP }}
         proxy_username: ec2-user
         proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-        
-        # ---- COMANDOS A EJECUTAR EN LA EC2 PRIVADA DE VENTAS ----
+
         script: |
-          # 2. Autenticar Docker con tu ECR usando la ruta estática
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
-          # 3. Traer (PULL) la imagen de Spring Boot desde tu ECR
           docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-back-ventas:v1
           
-          # 4. Detener y limpiar el contenedor antiguo si existe
           docker stop proyectosemestral-back-ventas || true
           docker rm proyectosemestral-back-ventas || true
           
-          # 5. Levantar el contenedor de Spring Boot mapeando el puerto 8080 y conectándolo a la DB
           docker run -d -p 8080:8080 \
             -e SPRING_DATASOURCE_URL=jdbc:mysql://${{ secrets.EC2_DATABASE_IP }}:3306/db_sistema \
             -e SPRING_DATASOURCE_USERNAME=user_sistema \
