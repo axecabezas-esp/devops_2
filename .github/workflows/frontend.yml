@@ -31,7 +31,7 @@ jobs:
       env:
         ECR_REGISTRY: 572392556337.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY: proyectosemestral-frontend
-        IMAGE_TAG: v1
+        IMAGE_TAG: v2
       run: |
         # Build limpio sin URLs harcodeadas de AWS
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./front_despacho
