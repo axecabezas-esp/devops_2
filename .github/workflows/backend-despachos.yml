@@ -5,12 +5,11 @@ on:
     branches: [ "main" ]
     paths:
       - 'back-Despachos_SpringBoot/**'
-      - '.github/workflows/backend.despachos.yml'
+      - '.github/workflows/backend-despachos.yml'
 
 env:
   AWS_REGION: us-east-1
   CONTAINER_NAME: back-despachos-container
-
 
 
 jobs:
