@@ -7,7 +7,6 @@ on:
       - 'front_despacho/**'
       - '.github/workflows/frontend.yml'
 
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
