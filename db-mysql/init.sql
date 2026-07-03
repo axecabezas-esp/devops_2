@@ -1,5 +1,4 @@
--- Asegurar el uso de la base de datos correcta
-USE db_sistema;
+USE proyectosemestral;
 
 -- =====================================================================
 -- 1. CREACIÓN DE LA TABLA DE VENTAS (Mapeado exacto de Venta.java)

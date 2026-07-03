@@ -1,46 +1,46 @@
-name: CI/CD Base de Datos
+# name: CI/CD Base de Datos
 
-on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - 'db-mysql/**'
-      - '.github/workflows/db.yml'
+# on:
+#   push:
+#     branches: [ "main" ]
+#     paths:
+#       - 'db-mysql/**'
+#       - '.github/workflows/db.yml'
 
-env:
-  AWS_REGION: us-east-1
-  CONTAINER_NAME: bd-mysql-container
+# env:
+#   AWS_REGION: us-east-1
+#   CONTAINER_NAME: bd-mysql-container
 
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Desplegar en EC2 Privada mediante Bastión
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_DATABASE_IP }}
-        username: ec2-user
-        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Desplegar en EC2 Privada mediante Bastión
+#       uses: appleboy/ssh-action@v1.0.3
+#       with:
+#         host: ${{ secrets.EC2_DATABASE_IP }}
+#         username: ec2-user
+#         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         
-        proxy_host: ${{ secrets.EC2_FRONTEND_IP }}
-        proxy_username: ec2-user
-        proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+#         proxy_host: ${{ secrets.EC2_FRONTEND_IP }}
+#         proxy_username: ec2-user
+#         proxy_key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         
-        script: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
+#         script: |
+#           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 572392556337.dkr.ecr.us-east-1.amazonaws.com
           
-          docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
+#           docker pull 572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
           
-          docker stop bd-mysql-container || true
-          docker rm bd-mysql-container || true
+#           docker stop bd-mysql-container || true
+#           docker rm bd-mysql-container || true
           
-          docker run -d -p 3306:3306 \
-            -e MYSQL_ROOT_PASSWORD=rootpassword \
-            -e MYSQL_DATABASE=db_sistema \
-            -e MYSQL_USER=user_sistema \
-            -e MYSQL_PASSWORD=userpassword \
-            --name bd-mysql-container \
-            572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
+#           docker run -d -p 3306:3306 \
+#             -e MYSQL_ROOT_PASSWORD=rootpassword \
+#             -e MYSQL_DATABASE=db_sistema \
+#             -e MYSQL_USER=user_sistema \
+#             -e MYSQL_PASSWORD=userpassword \
+#             --name bd-mysql-container \
+#             572392556337.dkr.ecr.us-east-1.amazonaws.com/proyectosemestral-bd:v1
             
-          unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+#           unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN

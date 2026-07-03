@@ -1,8 +1,6 @@
 FROM mysql:8.0
 
-ENV MYSQL_DATABASE=db_sistema
-ENV MYSQL_USER=user_sistema
-ENV MYSQL_PASSWORD=userpassword
+# Ya no ponemos ENV aqui. Kubernetes se encargará de inyectar MYSQL_ROOT_PASSWORD y MYSQL_DATABASE
 
 COPY ./init.sql /docker-entrypoint-initdb.d/
 

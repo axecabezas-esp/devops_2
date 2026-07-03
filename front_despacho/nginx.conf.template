@@ -8,20 +8,18 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Proxy para Ventas (Formato Estricto de Redirección)
+    # Proxy para Ventas apuntando directo al Service de Kubernetes
     location /api/v1/ventas {
-        # Se agrega /v1/ a la ruta del proxy_pass
-        proxy_pass http://${EC2_VENTAS_IP}:8080/api/v1/ventas;
+        proxy_pass http://ventas-backend:8080/api/v1/ventas;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Proxy para Despachos (Formato Estricto de Redirección)
+    # Proxy para Despachos apuntando directo al Service de Kubernetes
     location /api/v1/despachos {
-        # Se agrega /v1/ a la ruta del proxy_pass
-        proxy_pass http://${EC2_DESPACHOS_IP}:8080/api/v1/despachos;
+        proxy_pass http://despachos-backend:8080/api/v1/despachos;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
