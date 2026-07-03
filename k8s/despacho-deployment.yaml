@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: despachos-backend
+  namespace: tienda
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: despachos-backend
+  template:
+    metadata:
+      labels:
+        app: despachos-backend
+    spec:
+      containers:
+        - name: backend
+          image: 546739307538.dkr.ecr.us-east-1.amazonaws.com/despachos-backend:v1 # Colocar uri de tu imagen en ECR
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: "tienda-db"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: DB_NAME
+              value: "proyectosemestral"
+            - name: DB_PORT
+              value: "3306"
+
+          # Se agrega Resource para que Metrics Server calcule el % de CPU y Memoria para escalar 
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "350Mi"  # Aumentamos la memoria mínima
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
+          # HEALTH CHECKS (PROBES)
+          readinessProbe:
+            httpGet:
+              path: /swagger-ui.html  # Usamos la ruta de Swagger que tienes configurada
+              port: 8080              # Actualizado al puerto de Java
+            initialDelaySeconds: 20   # Le damos 20 segundos a Spring Boot para arrancar
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /swagger-ui.html
+              port: 8080
+            initialDelaySeconds: 30   # Damos un margen amplio antes del primer chequeo de muerte
+            periodSeconds: 15
