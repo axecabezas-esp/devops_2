@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS despacho (
 
 -- Insertar Ventas de prueba
 INSERT INTO venta (`id_venta`, `direccion_compra`, `valor_compra`, `fecha_compra`, `despacho_generado`) VALUES
-(1, 'Av. Concha y Toro 543', 45500, '2026-06-01', TRUE),
-(2, 'Pasaje Los Alerces 1120', 128900, '2026-06-03', TRUE),
+(1, 'Av. Concha y Toro 543', 45500, '2026-06-01', FALSE),
+(2, 'Pasaje Los Alerces 1120', 128900, '2026-06-03', FALSE),
 (3, 'Calle Limache 400', 23500, '2026-06-05', FALSE),
-(4, 'Calle Nueva York 88', 67000, '2026-06-08', TRUE);
+(4, 'Calle Nueva York 88', 67000, '2026-06-08', FALSE);
 
 -- Insertar Despachos de prueba (Ajustados a la nueva estructura)
 INSERT INTO despacho (`id_despacho`, `id_compra`, `direccion_compra`, `valor_compra`, `fecha_despacho`, `patente_camion`, `despachado`, `intento`) VALUES
