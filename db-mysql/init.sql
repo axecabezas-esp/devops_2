@@ -5,10 +5,10 @@ USE proyectosemestral;
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS venta (
     `id_venta` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `direccion_compra` VARCHAR(255) NOT NULL,
-    `valor_compra` INT NOT NULL,
-    `fecha_compra` DATE NOT NULL,
-    `despacho_generado` BOOLEAN NOT NULL DEFAULT FALSE
+    `direccion_compra` VARCHAR(255) ,
+    `valor_compra` INT ,
+    `fecha_compra` DATE ,
+    `despacho_generado` BOOLEAN DEFAULT FALSE
 );
 
 -- =====================================================================
@@ -16,13 +16,13 @@ CREATE TABLE IF NOT EXISTS venta (
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS despacho (
     `id_despacho` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `id_compra` BIGINT NOT NULL,
-    `direccion_compra` VARCHAR(255) NOT NULL,
-    `valor_compra` BIGINT NOT NULL,
+    `id_compra` BIGINT ,
+    `direccion_compra` VARCHAR(255) ,
+    `valor_compra` BIGINT ,
     `fecha_despacho` DATE NULL,
     `patente_camion` VARCHAR(255) NULL,
-    `despachado` BOOLEAN NOT NULL DEFAULT FALSE,
-    `intento` INT NOT NULL DEFAULT 0
+    `despachado` BOOLEAN  DEFAULT FALSE,
+    `intento` INT  DEFAULT 0
 );
 
 -- =====================================================================

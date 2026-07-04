@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tienda-backend
+  name: ventas-backend
   namespace: tienda
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: tienda-backend
+      app: ventas-backend
   template:
     metadata:
       labels:
-        app: tienda-backend
+        app: ventas-backend
     spec:
       containers:
         - name: backend
-          image: 546739307538.dkr.ecr.us-east-1.amazonaws.com/tienda-backend:v1 # Colocar uri de tu imagen en ECR
+          image: 546739307538.dkr.ecr.us-east-1.amazonaws.com/ventas-backend:v1 # Colocar uri de tu imagen en ECR
           ports:
             - containerPort: 8080
           env:
