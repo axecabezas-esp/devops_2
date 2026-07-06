@@ -6,7 +6,6 @@ on:
   workflow_dispatch: {}
 
 env:
-  # Repos de ECR actualizados para los 4 microservicios
   ECR_REPO_FRONTEND: tienda-frontend
   ECR_REPO_VENTAS: ventas-backend
   ECR_REPO_DESPACHOS: despachos-backend

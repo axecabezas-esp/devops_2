@@ -40,11 +40,11 @@ export const TableCompras = () => {
             <table className="table-fixed">
               <thead>
                 <tr className="py-10">
-                  <th className="pr-10">ID</th>
-                  <th className="pr-10">Direccion</th>
-                  <th className="pr-10">Fecha</th>
-                  <th className="pr-10">Valor</th>
-                  <th className="pr-10"></th>
+                  <th className="pr-10">Prueba</th>
+                  <th className="pr-10">despliegue</th>
+                  <th className="pr-10">continuo</th>
+                  <th className="pr-10">en</th>
+                  <th className="pr-10">eks</th>
                 </tr>
               </thead>
               <tbody>
