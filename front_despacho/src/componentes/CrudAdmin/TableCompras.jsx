@@ -44,7 +44,7 @@ export const TableCompras = () => {
                   <th className="pr-10">Direccion</th>
                   <th className="pr-10">Fecha</th>
                   <th className="pr-10">Valor</th>
-                  <th className="pr-10">.</th>
+                  <th className="pr-10"></th>
                 </tr>
               </thead>
               <tbody>
