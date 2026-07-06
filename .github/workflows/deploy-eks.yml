@@ -92,11 +92,13 @@ jobs:
       - name: Aplicar manifests base (namespace, DB, servicios)
         env:
           EKS_NAMESPACE: ${{ secrets.EKS_NAMESPACE }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/mysql-secret.yaml -n $EKS_NAMESPACE
           kubectl apply -f k8s/mysql-deployment.yaml -n $EKS_NAMESPACE
           kubectl apply -f k8s/mysql-service.yaml -n $EKS_NAMESPACE
+          kubectl set image deployment/tienda-db mysql=$ECR_REGISTRY/${ECR_REPO_DB}:${IMAGE_TAG} -n $EKS_NAMESPACE
 
       # ---------- Actualizar BACKEND VENTAS en EKS ----------
       - name: Actualizar BACKEND VENTAS en EKS
