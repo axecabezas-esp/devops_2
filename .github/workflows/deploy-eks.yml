@@ -1,4 +1,4 @@
-name: CI/CD Tienda Perritos EKS
+name: CI/CD Innovatech EKS
 
 on:
   push:
@@ -143,6 +143,7 @@ jobs:
           EKS_NAMESPACE: ${{ secrets.EKS_NAMESPACE }}
         run: |
           if [ -f k8s/backend-hpa.yaml ]; then kubectl apply -f k8s/backend-hpa.yaml -n $EKS_NAMESPACE; fi
+          if [ -f k8s/despacho-hpa.yaml ]; then kubectl apply -f k8s/despacho-hpa.yaml -n $EKS_NAMESPACE; fi
           if [ -f k8s/frontend-hpa.yaml ]; then kubectl apply -f k8s/frontend-hpa.yaml -n $EKS_NAMESPACE; fi
 
       # ---------- Ver estado final ----------

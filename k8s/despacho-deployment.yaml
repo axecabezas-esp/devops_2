@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: 572392556337.dkr.ecr.us-east-1.amazonaws.com/despachos-backend:v1 # Colocar uri de tu imagen en ECR
+          image: 546739307538.dkr.ecr.us-east-1.amazonaws.com/despachos-backend:v1 # Colocar uri de tu imagen en ECR
           ports:
             - containerPort: 8080
           env:
